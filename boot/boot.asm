@@ -160,14 +160,14 @@ Label_FileName_Found:
 	mov	ax,	cx
 
 Label_Go_On_Loading_File:
-	push	ax
-	push	bx
-	mov	ah,	0eh
-	mov	al,	'.'
-	mov	bl,	0fh
-	int	10h
-	pop	bx
-	pop	ax
+	; push	ax
+	; push	bx
+	; mov	ah,	0eh
+	; mov	al,	'.'
+	; mov	bl,	0fh
+	; int	10h
+	; pop	bx
+	; pop	ax
 
 	mov	cl,	1
 	call	Func_ReadOneSector
