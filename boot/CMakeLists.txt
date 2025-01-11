@@ -45,3 +45,12 @@ add_custom_command(
     COMMAND dd if=${CMAKE_BINARY_DIR}/boot.bin of=${BOOT_IMAGE} bs=512 count=1 conv=notrunc
     COMMENT "Writing bootloader to floppy.img"
 )
+
+# 拷贝 loader 到 boot
+add_custom_command(
+    TARGET create_boot_image POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E echo "Copying loader.bin to boot.img..."
+    COMMAND mcopy -i ${CMAKE_BINARY_DIR}/boot.img ${CMAKE_BINARY_DIR}/loader.bin ::/
+    DEPENDS ${CMAKE_BINARY_DIR}/loader.bin  
+    COMMENT "Copying loader.bin to boot.img using mcopy"
+)
