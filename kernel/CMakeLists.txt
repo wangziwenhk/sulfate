@@ -9,19 +9,24 @@ add_custom_command(
 add_custom_command(
     OUTPUT head.o
     COMMAND as --64 -o head.o head.s
-    DEPENDS head.s
+    DEPENDS ${CMAKE_BINARY_DIR}/kernel/head.s
     COMMENT "Assembling head.s to head.o"
 )
 
 add_custom_target(build_kernel_head ALL DEPENDS head.o)
 
-add_library(main_obj OBJECT main.c)
-target_compile_options(main_obj PRIVATE -mcmodel=large -fno-builtin -m64)
+
+add_custom_command(
+        OUTPUT main.o
+        COMMAND gcc -mcmodel=large -fno-builtin -m64 -c ${KERNEL_DIR}/main.c
+        DEPENDS ${KERNEL_DIR}/main.c
+        COMMENT "build main.c to main.o"
+)
 
 add_custom_command(
         OUTPUT system
-        COMMAND ld -b elf64-x86-64 -o system head.o $<TARGET_OBJECTS:main_obj> -T ${KERNEL_DIR}/Kernel.lds
-        DEPENDS head.o main_obj
+        COMMAND ld -b elf64-x86-64 -o system head.o main.o -T ${KERNEL_DIR}/Kernel.lds
+        DEPENDS head.o main.o
         COMMENT "Linking head.o and main.o to create system"
 )
 
@@ -35,3 +40,9 @@ add_custom_command(
 
 # 定义默认目标
 add_custom_target(build_kernel ALL DEPENDS kernel.bin)
+
+# 注册将 kernel.bin 拷贝到 boot.img 的 POST_BUILD 命令
+register_boot_image_post_build("mcopy -o -i ${BOOT_IMAGE} ${CMAKE_BINARY_DIR}/kernel/kernel.bin ::/")
+
+# 注册将 system 拷贝到 boot.img 的 POST_BUILD 命令
+register_boot_image_post_build("mcopy -o -i ${BOOT_IMAGE} ${CMAKE_BINARY_DIR}/kernel/system ::/")

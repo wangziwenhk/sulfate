@@ -1,5 +1,5 @@
 # 配置 bootloader 相关的路径
-set(BOOT_DIR ${CMAKE_SOURCE_DIR}/boot)
+
 set(BOOT_ASM_FILES
     ${BOOT_DIR}/boot.asm
     ${BOOT_DIR}/loader.asm
@@ -24,33 +24,8 @@ endforeach()
 # 编译 bootloader
 add_custom_target(build_bootloader ALL DEPENDS ${BIN_FILES})
 
-# 创建 boot.img
-set(BOOT_IMAGE ${CMAKE_BINARY_DIR}/boot.img)
+# 注册将 boot.bin 写入 boot.img 的 POST_BUILD 命令
+register_boot_image_post_build("dd if=${CMAKE_BINARY_DIR}/boot.bin of=${BOOT_IMAGE} bs=512 count=1 conv=notrunc")
 
-add_custom_command(
-    OUTPUT ${BOOT_IMAGE}
-    COMMAND ${CMAKE_COMMAND} -E echo "Creating 1.44MB floppy image..."
-    COMMAND dd if=/dev/zero of=${BOOT_IMAGE} bs=512 count=2880
-    DEPENDS ${BOOT_DIR}/boot.asm ${BOOT_DIR}/loader.asm
-    COMMENT "Generating boot.img using dd"
-    VERBATIM
-)
-
-add_custom_target(create_boot_image ALL
-    DEPENDS ${BOOT_IMAGE} ${CMAKE_BINARY_DIR}/boot.bin ${CMAKE_BINARY_DIR}/loader.bin
-)
-
-add_custom_command(
-    TARGET create_boot_image POST_BUILD
-    COMMAND dd if=${CMAKE_BINARY_DIR}/boot.bin of=${BOOT_IMAGE} bs=512 count=1 conv=notrunc
-    COMMENT "Writing bootloader to floppy.img"
-)
-
-# 拷贝 loader 到 boot
-add_custom_command(
-    TARGET create_boot_image POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E echo "Copying loader.bin to boot.img..."
-    COMMAND mcopy -o -i ${CMAKE_BINARY_DIR}/boot.img ${CMAKE_BINARY_DIR}/loader.bin ::/
-    DEPENDS ${CMAKE_BINARY_DIR}/loader.bin  
-    COMMENT "Copying loader.bin to boot.img using mcopy"
-)
+# 注册将 loader.bin 拷贝到 boot.img 的 POST_BUILD 命令
+register_boot_image_post_build("mcopy -o -i ${BOOT_IMAGE} ${CMAKE_BINARY_DIR}/loader.bin ::/")
