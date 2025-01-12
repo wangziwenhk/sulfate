@@ -37,7 +37,7 @@ add_custom_command(
 )
 
 add_custom_target(create_boot_image ALL
-    DEPENDS ${BOOT_IMAGE}
+    DEPENDS ${BOOT_IMAGE} ${CMAKE_BINARY_DIR}/boot.bin ${CMAKE_BINARY_DIR}/loader.bin
 )
 
 add_custom_command(
@@ -50,7 +50,7 @@ add_custom_command(
 add_custom_command(
     TARGET create_boot_image POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E echo "Copying loader.bin to boot.img..."
-    COMMAND mcopy -i ${CMAKE_BINARY_DIR}/boot.img ${CMAKE_BINARY_DIR}/loader.bin ::/
+    COMMAND mcopy -o -i ${CMAKE_BINARY_DIR}/boot.img ${CMAKE_BINARY_DIR}/loader.bin ::/
     DEPENDS ${CMAKE_BINARY_DIR}/loader.bin  
     COMMENT "Copying loader.bin to boot.img using mcopy"
 )

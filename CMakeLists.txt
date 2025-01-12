@@ -17,4 +17,4 @@ set(CMAKE_ASM_NASM_COMPILER ${NASM_EXECUTABLE})
 message(STATUS "Using NASM: ${CMAKE_ASM_NASM_COMPILER}")
 
 subdirs(boot)
-
+subdirs(kernel)
