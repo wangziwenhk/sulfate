@@ -17,13 +17,11 @@ static volatile LIMINE_REQUESTS_START_MARKER
 __attribute__((used, section(".limine_requests_end")))
 static volatile LIMINE_REQUESTS_END_MARKER
 
-void _start(void) {
-    if (LIMINE_BASE_REVISION_SUPPORTED == false) {
-        for (;;) __asm__ ("hlt");
-    }
+bool check();
 
-    if (framebuffer_request.response == NULL
-     || framebuffer_request.response->framebuffer_count < 1) {
+void _start(void) { // NOLINT(*-reserved-identifier)
+    // 如果 limine 版本过低
+    if (!check()) {
         for (;;) __asm__ ("hlt");
     }
 
@@ -42,4 +40,17 @@ void _start(void) {
     }
 
     for (;;) __asm__ ("hlt");
+}
+
+// 检查相关数据点是否正常
+bool check() {
+    if (LIMINE_BASE_REVISION_SUPPORTED == false) {
+        return false;
+    }
+
+    if (framebuffer_request.response == NULL
+     || framebuffer_request.response->framebuffer_count < 1) {
+        return false;
+     }
+    return true;
 }
