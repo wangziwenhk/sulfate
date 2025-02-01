@@ -1,7 +1,11 @@
 # Xmake cache
 .xmake/
 build/
-CMakeLists.txt
+compile_commands.json
+
+# Cmake cache
+CMakeLists.txt/
+cmake-build-debug/
 
 # IDE Config
 .idea/
