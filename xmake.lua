@@ -9,26 +9,33 @@ set_optimize("fastest")
 set_policy("run.autobuild", true)
 set_policy("check.auto_ignore_flags", false)
 
+
 target("kernel")
     set_kind("binary")
-    set_languages("c23")
-    set_languages("c++20")
+    set_languages("c23","c++20","zig")
     set_toolchains("@zig")
     set_default(false)
 
     add_includedirs("include")
     add_includedirs("include/stdlib")
     add_files("src/**.c")
+    add_files("src/**.zig")
 
     add_ldflags("-target x86_64-freestanding")
     add_cflags("-target x86_64-freestanding")
 
     add_ldflags("-T assets/linker.ld")
-    add_ldflags("-nostdlib")
     add_cxflags("-nostdlib")
     add_cxflags("-m64", "-flto", "-mno-red-zone")
     add_cxflags("-mcmodel=kernel")
     add_cxflags("-mno-80387", "-mno-mmx", "-mno-sse", "-mno-sse2")
+
+    before_build(function (target)
+        -- 假设你希望从 src/mylib.zig 中生成头文件 mylib.h，生成的头文件放在 include/ 目录下
+        os.mkdir("include")
+        os.runv("zig", {"build-lib", "src/test.zig", "--name", "zig_lib", "-femit-h=./include/zig_lib.h"})
+        print("Generated header include/mylib.h")
+    end)
 
 target("iso")
     set_kind("phony")

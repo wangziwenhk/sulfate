@@ -47,7 +47,7 @@ void _start(void) { // NOLINT(*-reserved-identifier)
 
     color_printk(YELLOW,BLACK, "System initialized, CPU speed: %dMHz\n", 2400);
 
-    for (;;) __asm__ ("hlt");
+    while (true) __asm__ ("hlt");
 }
 
 // 检查相关数据点是否正常
