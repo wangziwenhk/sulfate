@@ -5,7 +5,6 @@ add_requires("zig")
 
 set_arch("x86_64")
 set_optimize("fastest")
-set_warnings("all", "extra", "pedantic", "error")
 
 set_policy("run.autobuild", true)
 set_policy("check.auto_ignore_flags", false)
@@ -13,18 +12,23 @@ set_policy("check.auto_ignore_flags", false)
 target("kernel")
     set_kind("binary")
     set_languages("c23")
+    set_languages("c++20")
     set_toolchains("@zig")
     set_default(false)
 
     add_includedirs("include")
+    add_includedirs("include/stdlib")
     add_files("src/**.c")
 
     add_ldflags("-target x86_64-freestanding")
     add_cflags("-target x86_64-freestanding")
 
     add_ldflags("-T assets/linker.ld")
-    add_cflags("-m64", "-flto", "-mno-red-zone")
-    add_cflags("-mno-80387", "-mno-mmx", "-mno-sse", "-mno-sse2")
+    add_ldflags("-nostdlib")
+    add_cxflags("-nostdlib")
+    add_cxflags("-m64", "-flto", "-mno-red-zone")
+    add_cxflags("-mcmodel=kernel")
+    add_cxflags("-mno-80387", "-mno-mmx", "-mno-sse", "-mno-sse2")
 
 target("iso")
     set_kind("phony")

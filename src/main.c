@@ -1,6 +1,9 @@
 #include "stdint.h"
 #include "stddef.h"
 #include <limine.h>
+#include "stdbool.h"
+#include "font.h"
+#include "printk.h"
 
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3)
@@ -17,7 +20,7 @@ static volatile LIMINE_REQUESTS_START_MARKER
 __attribute__((used, section(".limine_requests_end")))
 static volatile LIMINE_REQUESTS_END_MARKER
 
-bool check();
+bool check(void);
 
 void _start(void) { // NOLINT(*-reserved-identifier)
     // 如果 limine 版本过低
@@ -30,20 +33,25 @@ void _start(void) { // NOLINT(*-reserved-identifier)
     uint64_t width = framebuffer->width;
     uint64_t height = framebuffer->height;
 
-    uint64_t stride = framebuffer->pitch / 4;
     uint32_t *buffer = framebuffer->address;
 
-    for (size_t y = 0; y < height; y++) {
-        for (size_t x = 0; x < width; x++) {
-            buffer[y * stride + x] = (x * 255 / width) << 16 | (y * 255 / height) << 8;
-        }
-    }
+    Pos.XResolution = width;
+    Pos.YResolution = height;
+    Pos.XPosition = 0;
+    Pos.YPosition = 0;
+    Pos.XCharSize = 8;
+    Pos.YCharSize = 16;
+
+    Pos.FB_addr = buffer;
+    Pos.FB_length = framebuffer->pitch * height * width;
+
+    color_printk(YELLOW,BLACK, "System initialized, CPU speed: %dMHz\n", 2400);
 
     for (;;) __asm__ ("hlt");
 }
 
 // 检查相关数据点是否正常
-bool check() {
+bool check(void) {
     if (LIMINE_BASE_REVISION_SUPPORTED == false) {
         return false;
     }
