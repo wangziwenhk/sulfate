@@ -1,9 +1,6 @@
 #include "stdint.h"
-#include "stddef.h"
 #include <limine.h>
-#include "stdbool.h"
-#include "font.h"
-#include "printk.h"
+#include "string.h"
 
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3)
@@ -20,12 +17,15 @@ static volatile LIMINE_REQUESTS_START_MARKER
 __attribute__((used, section(".limine_requests_end")))
 static volatile LIMINE_REQUESTS_END_MARKER
 
-bool check(void);
+bool check();
 
-void _start(void) { // NOLINT(*-reserved-identifier)
+extern "C"
+[[noreturn]]
+void _start() {
+    // NOLINT(*-reserved-identifier)
     // 如果 limine 版本过低
     if (!check()) {
-        for (;;) __asm__ ("hlt");
+        while (true) __asm__ ("hlt");
     }
 
     struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
@@ -33,32 +33,20 @@ void _start(void) { // NOLINT(*-reserved-identifier)
     uint64_t width = framebuffer->width;
     uint64_t height = framebuffer->height;
 
-    uint32_t *buffer = framebuffer->address;
-
-    Pos.XResolution = width;
-    Pos.YResolution = height;
-    Pos.XPosition = 0;
-    Pos.YPosition = 0;
-    Pos.XCharSize = 8;
-    Pos.YCharSize = 16;
-
-    Pos.FB_addr = buffer;
-    Pos.FB_length = framebuffer->pitch * height * width;
-
-    color_printk(YELLOW,BLACK, "System initialized, CPU speed: %dMHz\n", 2400);
+    auto *buffer = static_cast<uint32_t *>(framebuffer->address);
 
     while (true) __asm__ ("hlt");
 }
 
 // 检查相关数据点是否正常
-bool check(void) {
+bool check() {
     if (LIMINE_BASE_REVISION_SUPPORTED == false) {
         return false;
     }
 
-    if (framebuffer_request.response == NULL
-     || framebuffer_request.response->framebuffer_count < 1) {
+    if (framebuffer_request.response == nullptr
+        || framebuffer_request.response->framebuffer_count < 1) {
         return false;
-     }
+    }
     return true;
 }

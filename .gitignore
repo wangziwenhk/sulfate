@@ -6,6 +6,7 @@ compile_commands.json
 # Cmake cache
 CMakeLists.txt/
 cmake-build-debug/
+cmake-build-debug-*/
 
 # IDE Config
 .idea/
