@@ -1,7 +1,7 @@
 set_project("sulfate")
 
 add_rules("mode.debug", "mode.release")
-add_requires("zig")
+add_requires("llvm")
 
 set_arch("x86_64")
 set_optimize("fastest")
@@ -13,10 +13,11 @@ set_policy("check.auto_ignore_flags", false)
 target("kernel")
     set_kind("binary")
     set_languages("c++20")
-    set_toolchains("clang")
+    set_toolchains("@clang")
     set_default(false)
 
     add_includedirs("include")
+    add_includedirs("include/cstdlib")
     add_includedirs("include/stdlib")
     add_files("src/**.cpp")
 

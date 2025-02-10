@@ -6,7 +6,7 @@ __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3)
 
 __attribute__((used, section(".limine_requests")))
-static volatile struct limine_framebuffer_request framebuffer_request = {
+static volatile limine_framebuffer_request framebuffer_request = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
     .revision = 0
 };
@@ -28,12 +28,13 @@ void _start() {
         while (true) __asm__ ("hlt");
     }
 
-    struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
+    limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
 
     uint64_t width = framebuffer->width;
     uint64_t height = framebuffer->height;
 
     auto *buffer = static_cast<uint32_t *>(framebuffer->address);
+
 
     while (true) __asm__ ("hlt");
 }
