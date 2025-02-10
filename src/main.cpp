@@ -37,6 +37,7 @@ void _start() {
     auto *buffer = static_cast<uint32_t *>(framebuffer->address);
 
     io::init(buffer);
+    io::putchar('a');
 
     while (true) __asm__ ("hlt");
 }
