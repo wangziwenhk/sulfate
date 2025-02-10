@@ -1,6 +1,7 @@
 #include "stdint.h"
 #include <limine.h>
 #include "string.h"
+#include "io/iostream.h"
 
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3)
@@ -35,6 +36,7 @@ void _start() {
 
     auto *buffer = static_cast<uint32_t *>(framebuffer->address);
 
+    io::init(buffer);
 
     while (true) __asm__ ("hlt");
 }
