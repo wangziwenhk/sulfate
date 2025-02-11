@@ -37,9 +37,7 @@ void _start() {
 
     io::init_vga(buffer, width, height);
 
-    io::print("hello world\n");
-    io::print("hello world\n");
-    io::print("hello world\n");
+    io::printf("hello%d",1);
 
     while (true) __asm__ ("hlt");
 }
