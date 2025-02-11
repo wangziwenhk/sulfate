@@ -1,6 +1,7 @@
 #include "io/iostream.h"
 #include <limine.h>
 #include "stdint.h"
+#include "asm/unistd.h"
 
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3)
@@ -25,7 +26,7 @@ void _start() {
     // NOLINT(*-reserved-identifier)
     // 如果 limine 版本过低
     if (!check()) {
-        while (true) __asm__ ("hlt");
+        while (true) hlt();
     }
 
     limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
@@ -37,9 +38,9 @@ void _start() {
 
     io::init_vga(buffer, width, height);
 
-    io::printf("hello%d",1);
+    io::printf("hello world {} nb\n", 123);
 
-    while (true) __asm__ ("hlt");
+    while (true) hlt();
 }
 
 // 检查相关数据点是否正常

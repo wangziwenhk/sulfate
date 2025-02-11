@@ -18,7 +18,6 @@ target("kernel")
 
     add_includedirs("include")
     add_includedirs("include/cstdlib")
-    add_includedirs("include/stdlib")
     add_files("src/**.cpp")
     add_cxflags("-ffreestanding", "-mno-red-zone", "-fno-exceptions", "-fno-rtti","-m64", "-flto")
     add_cxflags("-mno-80387", "-mno-mmx", "-mno-sse", "-mno-sse2")
