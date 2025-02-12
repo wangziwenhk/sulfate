@@ -58,8 +58,12 @@ void io::putchar(const char c) {
     }
 }
 
-void io::print(const char *c) {
-    for (int i = 0; i < std::strlen(c); i++) {
-        putchar(c[i]);
+void io::print(const char *fmt) {
+    for (int i = 0; i < std::strlen(fmt); i++) {
+        if (fmt[i] == '{' && fmt[i + 1] == '}') {
+            i+=1;
+            continue;
+        }
+        putchar(fmt[i]);
     }
 }

@@ -1,5 +1,5 @@
 #include "string.h"
-#include "memory.h"
+#include "memory/memory.h"
 using namespace std;
 
 size_t std::strlen(const char *s) {

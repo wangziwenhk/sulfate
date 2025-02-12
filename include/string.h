@@ -2,7 +2,6 @@
 #define STRING_H
 
 #include "stddef.h"
-#include "alloca/alloca.h"
 
 namespace std {
     size_t strlen(const char *s);
@@ -16,7 +15,6 @@ namespace std {
     int strcmp(const char *left, const char *right);
 
     char *itoa(int value, char *str, int base);
-
 }
 
 #endif //STRING_H
