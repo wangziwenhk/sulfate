@@ -8,9 +8,9 @@ static uint8_t kernel_heap[HEAP_SIZE] __attribute__((aligned(8)));
 
 /* 内存块管理结构 */
 typedef struct heap_block {
-    size_t size;              // 本块数据区大小，不包括管理头
-    int free;                 // 1 表示空闲，0 表示已分配
-    struct heap_block *next;  // 指向下一个内存块
+    size_t size; // 本块数据区大小，不包括管理头
+    int free; // 1 表示空闲，0 表示已分配
+    struct heap_block *next; // 指向下一个内存块
 } heap_block_t;
 
 /* 堆的空闲链表起始地址 */
@@ -35,7 +35,8 @@ void *kernel::kalloc(size_t size) {
         if (current->free && current->size >= size) {
             /* 如果空间足够大则进行分割 */
             if (current->size >= size + sizeof(heap_block_t) + 8) {
-                heap_block_t *new_block = reinterpret_cast<heap_block_t *>(reinterpret_cast<char *>(current) + sizeof(heap_block_t) + size);
+                const auto new_block = reinterpret_cast<heap_block_t *>(
+                    reinterpret_cast<char *>(current) + sizeof(heap_block_t) + size);
                 new_block->size = current->size - size - sizeof(heap_block_t);
                 new_block->free = 1;
                 new_block->next = current->next;
@@ -44,7 +45,7 @@ void *kernel::kalloc(size_t size) {
                 current->next = new_block;
             }
             current->free = 0;
-            return (void *)(reinterpret_cast<char *>(current) + sizeof(heap_block_t));
+            return reinterpret_cast<char *>(current) + sizeof(heap_block_t);
         }
         current = current->next;
     }

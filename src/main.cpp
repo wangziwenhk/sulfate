@@ -57,7 +57,9 @@ void _start() {
 
     const char* b = ax;
 
-    io::print("{} world nb\n", b);
+    long long a = 1e20;
+
+    io::print("{} world nb\n", a);
 
     while (true)
         hlt();

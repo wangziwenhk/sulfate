@@ -15,6 +15,8 @@ namespace std {
     int strcmp(const char *left, const char *right);
 
     char *itoa(int value, char *str, int base);
+
+    char* ltoa(long long value, char *str, int base);
 }
 
 #endif //STRING_H
