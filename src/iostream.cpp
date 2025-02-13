@@ -1,6 +1,6 @@
-#include "io/iostream.h"
-#include "io/color.h"
-#include "io/font.h"
+#include "sulfate/io/iostream.h"
+#include "sulfate/io/color.h"
+#include "sulfate/io/font.h"
 #include "string.h"
 using namespace io;
 
@@ -59,7 +59,7 @@ void io::putchar(const char c) {
 }
 
 void io::print(const char *fmt) {
-    for (int i = 0; i < std::strlen(fmt); i++) {
+    for (int i = 0; i < sulfate::strlen(fmt); i++) {
         if (fmt[i] == '{' && fmt[i + 1] == '}') {
             i+=1;
             continue;

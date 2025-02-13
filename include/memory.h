@@ -3,7 +3,7 @@
 
 #include "stddef.h"
 
-namespace std{
+namespace sulfate{
     inline void memcpy(void *dest, const void *src, const size_t n) {
         __builtin_memcpy(dest, src, n);
     }

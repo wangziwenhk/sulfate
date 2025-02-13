@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "memory/alloca.h"
+#include "sulfate/memory/alloca.h"
 /* 定义堆的大小，比如 16MB */
 #define HEAP_SIZE (1 * 1024 * 1024)
 
@@ -10,7 +10,7 @@ static uint8_t kernel_heap[HEAP_SIZE] __attribute__((aligned(8)));
 typedef struct heap_block {
     size_t size; // 本块数据区大小，不包括管理头
     int free; // 1 表示空闲，0 表示已分配
-    struct heap_block *next; // 指向下一个内存块
+    heap_block *next; // 指向下一个内存块
 } heap_block_t;
 
 /* 堆的空闲链表起始地址 */
@@ -58,7 +58,7 @@ void kernel::kfree(void *ptr) {
     if (!ptr)
         return;
 
-    heap_block_t *block = reinterpret_cast<heap_block_t *>(static_cast<char *>(ptr) - sizeof(heap_block_t));
+    const auto block = reinterpret_cast<heap_block_t *>(static_cast<char *>(ptr) - sizeof(heap_block_t));
     block->free = 1;
 
     /* 简单合并相邻空闲块，减少碎片 */

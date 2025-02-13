@@ -1,8 +1,8 @@
 #include "string.h"
-#include "memory/memory.h"
-using namespace std;
+#include "memory.h"
+using namespace sulfate;
 
-size_t std::strlen(const char *s) {
+size_t sulfate::strlen(const char *s) {
     size_t len = 0;
     while (s[len] != '\0') {
         len++;
@@ -10,31 +10,31 @@ size_t std::strlen(const char *s) {
     return len;
 }
 
-char *std::strcpy(char *dest, const char *src) {
+char *sulfate::strcpy(char *dest, const char *src) {
     const size_t len = strlen(src) + 1;
     memcpy(dest, src, len);
     return dest;
 }
 
-char *std::strncpy(char *dest, const char *src, const size_t count) {
-    if (const size_t len = std::strlen(src); len < count) {
-        std::memcpy(dest, src, len + 1);
-        std::memset(dest + len + 1, '\0', count - len - 1);
+char *sulfate::strncpy(char *dest, const char *src, const size_t count) {
+    if (const size_t len = strlen(src); len < count) {
+        memcpy(dest, src, len + 1);
+        memset(dest + len + 1, '\0', count - len - 1);
     } else {
-        std::memcpy(dest, src, count);
+        memcpy(dest, src, count);
     }
 
     return dest;
 }
 
-char *std::strcat(char *dest, const char *src) {
-    const size_t dest_len = std::strlen(dest);
-    const size_t src_len = std::strlen(src) + 1;
-    std::memcpy(dest + dest_len, src, src_len);
+char *sulfate::strcat(char *dest, const char *src) {
+    const size_t dest_len = strlen(dest);
+    const size_t src_len = strlen(src) + 1;
+    memcpy(dest + dest_len, src, src_len);
     return dest;
 }
 
-int std::strcmp(const char *left, const char *right) {
+int sulfate::strcmp(const char *left, const char *right) {
     while (*left != '\0' && *left == *right) {
         ++left;
         ++right;
@@ -42,7 +42,7 @@ int std::strcmp(const char *left, const char *right) {
     return static_cast<unsigned char>(*left) - static_cast<unsigned char>(*right);
 }
 
-char *std::itoa(int value, char *str, const int base) {
+char *sulfate::itoa(int value, char *str, const int base) {
     if (base < 2 || base > 36) {
         *str = '\0';
         return str;
@@ -81,7 +81,7 @@ char *std::itoa(int value, char *str, const int base) {
     return str;
 }
 
-char *std::ltoa(long long value, char *str, const int base) {
+char *sulfate::ltoa(long long value, char *str, const int base) {
     if (base < 2 || base > 36) {
         *str = '\0';
         return str;

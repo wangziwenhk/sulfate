@@ -4,7 +4,7 @@
 
 #include "stddef.h"
 
-namespace std {
+namespace sulfate {
     template<typename Tp, Tp v>
     struct integral_constant {
         static constexpr Tp value = v;
@@ -20,11 +20,11 @@ namespace std {
     using false_type = bool_constant<false>;
 
     template<typename T, typename U>
-    struct is_same : std::false_type {
+    struct is_same : false_type {
     };
 
     template<typename T>
-    struct is_same<T, T> : std::true_type {
+    struct is_same<T, T> : true_type {
     };
 
     template<typename T, typename U>
@@ -107,15 +107,15 @@ namespace std {
     using remove_extent_t = typename remove_extent<T>::type;
 
     template<typename T>
-    struct is_function : std::false_type {
+    struct is_function : false_type {
     };
 
     template<typename R, typename... Args>
-    struct is_function<R(Args...)> : std::true_type {
+    struct is_function<R(Args...)> : true_type {
     };
 
     template<typename R, typename... Args>
-    struct is_function<R(Args..., ...)> : std::true_type {
+    struct is_function<R(Args..., ...)> : true_type {
     };
 
     template<typename T>
@@ -123,7 +123,7 @@ namespace std {
 
     template<typename T>
     struct add_pointer {
-        using type = typename std::remove_reference<T>::type *;
+        using type = typename remove_reference<T>::type *;
     };
 
     template<typename T>
@@ -132,24 +132,24 @@ namespace std {
     template<typename T>
     struct decay {
         // 首先移除引用，得到 U 类型
-        using U = typename std::remove_reference<T>::type;
+        using U = typename remove_reference<T>::type;
 
         // 如果 U 是数组类型，则转换为对应的指针类型
         // 如果 U 是函数类型，则转换为对应的函数指针类型
         // 否则，移除顶层的 const 和 volatile 限定符
-        using type = typename std::conditional<
-            std::is_array<U>::value,
-            typename std::remove_extent<U>::type *,
-            typename std::conditional<
-                std::is_function<U>::value,
-                typename std::add_pointer<U>::type,
-                typename std::remove_cv<U>::type
+        using type = typename conditional<
+            is_array<U>::value,
+            typename remove_extent<U>::type *,
+            typename conditional<
+                is_function<U>::value,
+                typename add_pointer<U>::type,
+                typename remove_cv<U>::type
             >::type
         >::type;
     };
 
     template<typename T>
-    using decay_t = typename std::decay<T>::type;
+    using decay_t = typename decay<T>::type;
 }
 
 #endif //TYPE_TRAITS_H
