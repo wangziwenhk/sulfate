@@ -2,12 +2,14 @@
 #define STRING_H
 
 #include <utility>
-#include "sulfate/memory/allocator.h"
+#include "allocator.h"
 #include "stddef.h"
 
 namespace sulfate {
+    /// 获取一个字符串的长度
     size_t strlen(const char *s);
 
+    /// 复制一个字符串
     char *strcpy(char *dest, const char *src);
 
     char *strncpy(char *dest, const char *src, size_t count);
@@ -19,6 +21,8 @@ namespace sulfate {
     char *itoa(int value, char *str, int base);
 
     char *ltoa(long long value, char *str, int base);
+
+    int atoi(const char *str);
 
     template<typename CharT>
     struct char_traits {

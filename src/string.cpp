@@ -119,3 +119,12 @@ char *sulfate::ltoa(long long value, char *str, const int base) {
 
     return str;
 }
+
+int sulfate::atoi(const char *str) {
+    int result = 0;
+    while (*str >= '0' && *str <= '9') {
+        result = result * 10 + (*str - '0');
+        str++;
+    }
+    return result;
+}

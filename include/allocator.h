@@ -1,7 +1,7 @@
 #ifndef ALLOCATOR_H
 #define ALLOCATOR_H
 
-#include "alloca.h"
+#include "sulfate/memory/alloca.h"
 namespace sulfate  {
     template<class T>
     class allocator {

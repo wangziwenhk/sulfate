@@ -9,6 +9,9 @@ namespace io {
     /// 初始化 vga
     void init_vga(uint32_t *FB, uint64_t width, uint64_t height);
 
+    size_t getCursorX();
+    size_t getCursorY();
+
     /// 在屏幕上打印出一个字符
     void putchar(char c);
 
@@ -26,11 +29,12 @@ namespace io {
     /// print("hello {}! {}","world",233);
     /// @endcode
     template<typename T, typename... Args>
-    void print(const char *format, T&& value, Args&&... args) {
+    void print(const char *format, T &&value, Args &&... args) {
         using BaseType = sulfate::decay_t<T>;
-        while (*format) {
-            if (*format == '{' && *(format + 1) == '}') {
-                if constexpr (sulfate::is_same_v<BaseType, char *> || sulfate::is_same_v<BaseType,const char *>) {
+        const size_t length = sulfate::strlen(format);
+        for (size_t i = 0; i < length; i++) {
+            if (format[i] == '{' && length - i - 1 >= 2 && format[i + 1] == '}') {
+                if constexpr (sulfate::is_same_v<BaseType, char *> || sulfate::is_same_v<BaseType, const char *>) {
                     print(value);
                 } else if constexpr (sulfate::is_same_v<BaseType, int>) {
                     char buf[12];
@@ -39,13 +43,11 @@ namespace io {
                     char buf[24];
                     print(sulfate::ltoa(value, buf, 10));
                 }
-                format++;
-                print(format + 1, args...);
+                i++;
+                print(format + i + 1, args...);
                 return;
-            } else {
-                putchar(*format);
-                ++format;
             }
+            putchar(format[i]);
         }
     }
 }

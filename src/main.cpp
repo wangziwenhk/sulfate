@@ -41,7 +41,7 @@ void _start() {
     sulfate::string b("123");
     a.append(b.c_str());
 
-    io::print("hello world {}\n", a.c_str());
+    io::print("hello world {}\n", sulfate::atoi(a.c_str()));
 
     while (true)
         hlt();

@@ -22,13 +22,20 @@ void io::init_vga(uint32_t *FB, const uint64_t width, const uint64_t height) {
     cursorY = 0;
 }
 
+size_t io::getCursorX() {
+    return cursorX;
+}
+
+size_t io::getCursorY() {
+    return cursorY;
+}
+
 void io::print_char_on_screen(const uint64_t Xsize, const uint64_t x, const uint64_t y, const uint32_t FRcolor,
-                           const uint32_t BKcolor,
-                           const unsigned char *fontP) {
+                              const uint32_t BKcolor,
+                              const unsigned char *fontP) {
     int i = 0, j = 0;
     unsigned int *addr = nullptr;
     int testVal = 0;
-
     for (i = 0; i < 16; i++) {
         addr = vga_framebuffer + Xsize * (y + i) + x;
         testVal = 0x100;
