@@ -1,12 +1,11 @@
-#include "stdint.h"
-#include "stddef.h"
+#include "cstdlib/stddef.h"
 #include <limine.h>
 
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3)
 
 __attribute__((used, section(".limine_requests")))
-static volatile struct limine_framebuffer_request framebuffer_request = {
+static volatile limine_framebuffer_request framebuffer_request = {
     .id = LIMINE_FRAMEBUFFER_REQUEST,
     .revision = 0
 };
@@ -35,7 +34,7 @@ extern "C"
     uint64_t height = framebuffer->height;
 
     uint64_t stride = framebuffer->pitch / 4;
-    uint32_t *buffer = static_cast<uint32_t *>(framebuffer->address);
+    auto buffer = static_cast<uint32_t *>(framebuffer->address);
 
     for (size_t y = 0; y < height; y++) {
         for (size_t x = 0; x < width; x++) {

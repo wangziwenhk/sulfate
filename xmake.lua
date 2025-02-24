@@ -1,4 +1,4 @@
-set_project("ExampleOS")
+set_project("sulfate")
 
 add_rules("mode.debug", "mode.release")
 add_requires("llvm")
@@ -27,7 +27,8 @@ target("kernel")
 
     add_files("src/**.cpp")
     add_includedirs("include")
-    add_ldflags("-T assets/linker.ld", "-e kmain")
+
+    add_ldflags("-T " .. os.scriptdir() .. "/assets/linker.ld", "-e kmain")
 
 target("iso")
     set_kind("phony")
@@ -43,7 +44,7 @@ target("iso")
         local target = project.target("kernel")
         os.cp(target:targetfile(), iso_dir .. "/kernel.elf")
 
-        local iso_file = "$(buildir)/ExampleOS.iso"
+        local iso_file = "$(buildir)/sulfate.iso"
         os.run("xorriso -as mkisofs -efi-boot-part --efi-boot-image --protective-msdos-label " ..
                 "-no-emul-boot -boot-load-size 4 -boot-info-table -hfsplus "..
                 "-R -r -J -apm-block-size 2048 "..
@@ -60,7 +61,7 @@ target("iso")
             "-cpu", "qemu64,+x2apic",
             "-smp", "4",
             "-drive", "if=pflash,format=raw,file=assets/ovmf-code.fd",
-            "-cdrom", config.buildir() .. "/ExampleOS.iso"
+            "-cdrom", config.buildir() .. "/sulfate.iso"
         }
 
         os.runv("qemu-system-x86_64", flags)
