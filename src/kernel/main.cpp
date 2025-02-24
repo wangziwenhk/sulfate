@@ -1,6 +1,8 @@
-#include "cstdlib/stddef.h"
 #include <limine.h>
+#include "stddef.h"
+#include "sulfate/driver/tty.h"
 
+// clang-format off
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3)
 
@@ -16,16 +18,17 @@ static volatile LIMINE_REQUESTS_START_MARKER
 __attribute__((used, section(".limine_requests_end")))
 static volatile LIMINE_REQUESTS_END_MARKER
 
-
 extern "C"
 [[noreturn]] void kmain(void) {
+    // clang-format on
     if (LIMINE_BASE_REVISION_SUPPORTED == false) {
-        for (;;) __asm__ ("hlt");
+        for (;;)
+            __asm__("hlt");
     }
 
-    if (framebuffer_request.response == nullptr
-        || framebuffer_request.response->framebuffer_count < 1) {
-        for (;;) __asm__ ("hlt");
+    if (framebuffer_request.response == nullptr || framebuffer_request.response->framebuffer_count < 1) {
+        for (;;)
+            __asm__("hlt");
     }
 
     limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
@@ -42,5 +45,6 @@ extern "C"
         }
     }
 
-    for (;;) __asm__ ("hlt");
+    for (;;)
+        __asm__("hlt");
 }

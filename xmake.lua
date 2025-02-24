@@ -26,7 +26,9 @@ target("kernel")
     set_default(false)
 
     add_files("src/**.cpp")
+
     add_includedirs("include")
+    add_includedirs("include/cstdlib")
 
     add_ldflags("-T " .. os.scriptdir() .. "/assets/linker.ld", "-e kmain")
 
