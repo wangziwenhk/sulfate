@@ -48,10 +48,4 @@ typedef decltype(nullptr) nullptr_t;
 #  define __STDC_VERSION_STDDEF_H__ 202311L
 #endif
 
-#ifdef __cplusplus
-namespace sulfate {
-  using size_t = ::size_t;
-}
-#endif
-
 #endif

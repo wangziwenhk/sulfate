@@ -12,5 +12,8 @@ namespace sulfate::driver {
 
     private:
         size_t bufferSize = 0;
+        uint32_t *buffer = nullptr;
+        size_t width = 0;
+        size_t height = 0;
     };
 } // namespace sulfate::driver

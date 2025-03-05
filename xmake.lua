@@ -3,7 +3,12 @@ set_project("sulfate")
 add_rules("mode.debug", "mode.release")
 add_requires("llvm")
 
-set_arch("x86_64")
+if is_os("windows") then
+    set_arch("x64")
+elseif is_os("linux") then
+    set_arch("x86_64")
+end
+
 set_optimize("fastest")
 
 set_policy("run.autobuild", true)
@@ -20,15 +25,17 @@ add_cxflags("-mno-red-zone", "-fno-exceptions", "-fno-rtti","-m64")
 
 target("kernel")
     set_kind("binary")
-    set_languages("c++20")
+    set_languages("c++23")
     set_toolchains("llvm")
 
     set_default(false)
 
     add_files("src/**.cpp")
+    add_headerfiles("include/**.h")
 
     add_includedirs("include")
     add_includedirs("include/cstdlib")
+    add_includedirs("include/stdlib")
 
     add_ldflags("-T " .. os.scriptdir() .. "/assets/linker.ld", "-e kmain")
 

@@ -1,7 +1,9 @@
 #include <limine.h>
 #include "stddef.h"
 #include "sulfate/driver/tty.h"
+#include "sulfate/memory/kalloc.h"
 
+#pragma region limine
 // clang-format off
 __attribute__((used, section(".limine_requests")))
 static volatile LIMINE_BASE_REVISION(3)
@@ -18,16 +20,22 @@ static volatile LIMINE_REQUESTS_START_MARKER
 __attribute__((used, section(".limine_requests_end")))
 static volatile LIMINE_REQUESTS_END_MARKER
 
-extern "C"
-[[noreturn]] void kmain(void) {
-    // clang-format on
+#pragma endregion
+
+void check() {
+
+}
+// clang-format on
+
+extern "C" [[noreturn]] void kmain(void) {
+
     if (LIMINE_BASE_REVISION_SUPPORTED == false) {
-        for (;;)
+        while (true)
             __asm__("hlt");
     }
 
     if (framebuffer_request.response == nullptr || framebuffer_request.response->framebuffer_count < 1) {
-        for (;;)
+        while (true)
             __asm__("hlt");
     }
 
@@ -45,6 +53,8 @@ extern "C"
         }
     }
 
-    for (;;)
+    sulfate::pci::read_pci_config_word(1,1,1,0);
+
+    while (true)
         __asm__("hlt");
 }
